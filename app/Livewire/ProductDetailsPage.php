@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Product;
 use App\Support\CartManager;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class ProductDetailsPage extends Component
@@ -22,6 +23,25 @@ class ProductDetailsPage extends Component
 
         $this->dispatch('cart-updated');
         $this->dispatch('notify', message: "{$this->product->name} added to cart.");
+    }
+
+    public function buyNow(): void
+    {
+        if (!Auth::check()) {
+            $this->redirect(route('login'));
+            return;
+        }
+
+        $validated = $this->validate([
+            'quantity' => ['required', 'integer', 'min:1', 'max:'.$this->product->stock],
+        ]);
+
+        // Clear cart and add this product
+        CartManager::clear();
+        CartManager::add($this->product, $validated['quantity']);
+
+        $this->dispatch('cart-updated');
+        $this->redirect(route('checkout.index'));
     }
 
     public function render()

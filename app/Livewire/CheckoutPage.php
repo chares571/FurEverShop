@@ -16,6 +16,7 @@ class CheckoutPage extends Component
     public string $shipping_phone = '';
     public string $shipping_address = '';
     public string $notes = '';
+    public string $payment_method = 'cash_on_delivery';
 
     public function mount(): void
     {
@@ -36,6 +37,7 @@ class CheckoutPage extends Component
             'shipping_phone' => ['required', 'string', 'max:30'],
             'shipping_address' => ['required', 'string', 'max:1000'],
             'notes' => ['nullable', 'string', 'max:1000'],
+            'payment_method' => ['required', 'in:cash_on_delivery,e_wallet,bank_transfer'],
         ]);
 
         $order = DB::transaction(function () use ($items, $validated) {

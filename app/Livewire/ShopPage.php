@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Product;
 use App\Support\CartManager;
 use App\Support\FurEver;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -51,6 +52,28 @@ class ShopPage extends Component
 
         $this->dispatch('cart-updated');
         $this->dispatch('notify', message: "{$product->name} added to cart.");
+    }
+
+    public function buyNow(int $productId): void
+    {
+        if (!Auth::check()) {
+            $this->redirect(route('login'));
+            return;
+        }
+
+        $product = Product::query()->findOrFail($productId);
+
+        if (! $product->inStock()) {
+            $this->dispatch('notify', message: 'That item is currently out of stock.', type: 'error');
+            return;
+        }
+
+        // Clear cart and add this product
+        CartManager::clear();
+        CartManager::add($product);
+
+        $this->dispatch('cart-updated');
+        $this->redirect(route('checkout.index'));
     }
 
     public function render()

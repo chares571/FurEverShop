@@ -36,6 +36,48 @@
                 @error('shipping_address') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
             </div>
 
+            <div class="border-t border-slate-100 pt-6">
+                <label class="mb-4 block text-sm font-semibold text-slate-700">Payment Method</label>
+                <div class="space-y-3">
+                    <!-- Cash on Delivery -->
+                    <label class="flex items-center gap-4 rounded-lg border-2 border-slate-100 p-4 transition cursor-pointer" :class="{ 'border-orange-500 bg-orange-50': $wire.payment_method === 'cash_on_delivery' }">
+                        <input type="radio" wire:model="payment_method" value="cash_on_delivery" class="h-4 w-4 text-orange-600">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">💵</span>
+                            <div>
+                                <p class="font-semibold text-slate-900">Cash on Delivery</p>
+                                <p class="text-xs text-slate-500">Pay when your order arrives</p>
+                            </div>
+                        </div>
+                    </label>
+
+                    <!-- E-Wallet -->
+                    <label class="flex items-center gap-4 rounded-lg border-2 border-slate-100 p-4 transition cursor-pointer" :class="{ 'border-orange-500 bg-orange-50': $wire.payment_method === 'e_wallet' }">
+                        <input type="radio" wire:model="payment_method" value="e_wallet" class="h-4 w-4 text-orange-600">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">📱</span>
+                            <div>
+                                <p class="font-semibold text-slate-900">E-Wallet</p>
+                                <p class="text-xs text-slate-500">GCash, PayMaya, or similar</p>
+                            </div>
+                        </div>
+                    </label>
+
+                    <!-- Bank Transfer -->
+                    <label class="flex items-center gap-4 rounded-lg border-2 border-slate-100 p-4 transition cursor-pointer" :class="{ 'border-orange-500 bg-orange-50': $wire.payment_method === 'bank_transfer' }">
+                        <input type="radio" wire:model="payment_method" value="bank_transfer" class="h-4 w-4 text-orange-600">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">🏦</span>
+                            <div>
+                                <p class="font-semibold text-slate-900">Bank Transfer</p>
+                                <p class="text-xs text-slate-500">Direct bank deposit</p>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+                @error('payment_method') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
+            </div>
+
             <button type="submit" class="fur-button w-full" wire:loading.attr="disabled">
                 <span wire:loading.remove wire:target="placeOrder">Place order</span>
                 <span wire:loading wire:target="placeOrder">Processing your order...</span>

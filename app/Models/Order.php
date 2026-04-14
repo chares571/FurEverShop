@@ -16,10 +16,15 @@ class Order extends Model
     public const STATUS_COMPLETED = 'completed';
     public const STATUS_CANCELLED = 'cancelled';
 
+    public const PAYMENT_CASH_ON_DELIVERY = 'cash_on_delivery';
+    public const PAYMENT_E_WALLET = 'e_wallet';
+    public const PAYMENT_BANK_TRANSFER = 'bank_transfer';
+
     protected $fillable = [
         'user_id',
         'total_price',
         'status',
+        'payment_method',
         'shipping_name',
         'shipping_email',
         'shipping_phone',

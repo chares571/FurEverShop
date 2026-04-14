@@ -102,6 +102,25 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         $product = Arr::random(self::$catalog);
+        
+        // Array of pet product image URLs from Unsplash
+        $imageUrls = [
+            'https://images.unsplash.com/photo-1567409327091-f8169fb2f45d?w=500&q=80',
+            'https://images.unsplash.com/photo-1558847496-d89291a36ad4?w=500&q=80',
+            'https://images.unsplash.com/photo-1560584158-d6c5b3a76ff0?w=500&q=80',
+            'https://images.unsplash.com/photo-1577720643272-265f434258bb?w=500&q=80',
+            'https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?w=500&q=80',
+            'https://images.unsplash.com/photo-1558047528-01e82d0e2dee?w=500&q=80',
+            'https://images.unsplash.com/photo-1542023783-74f07f2c3b23?w=500&q=80',
+            'https://images.unsplash.com/photo-1423666639041-f56979c51ba2?w=500&q=80',
+            'https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?w=500&q=80',
+            'https://images.unsplash.com/photo-1530268729831-4b51a298d8d8?w=500&q=80',
+            'https://images.unsplash.com/photo-1521715206568-82b9ce174735?w=500&q=80',
+            'https://images.unsplash.com/photo-1604568789367-6f6ef228f81e?w=500&q=80',
+            'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=500&q=80',
+            'https://images.unsplash.com/photo-1598411610957-f68ace1d45e9?w=500&q=80',
+            'https://images.unsplash.com/photo-1568310735196-01e81f40a1dd?w=500&q=80',
+        ];
 
         return [
             'name' => $product['name'],
@@ -109,7 +128,7 @@ class ProductFactory extends Factory
             'category' => $product['category'],
             'description' => $product['description'],
             'price' => $product['price'],
-            'image' => null,
+            'image' => Arr::random($imageUrls),
             'stock' => $product['stock'],
             'is_featured' => false,
         ];

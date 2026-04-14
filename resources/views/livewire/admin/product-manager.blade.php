@@ -46,7 +46,7 @@
                     </div>
 
                     <div>
-                        <label class="mb-2 block text-sm font-semibold text-slate-700">Description</label>
+                        <label class="mb-2 block text-sm font-semibold text-slate-700">Description <span class="text-xs font-normal text-slate-500">(optional)</span></label>
                         <textarea wire:model="description" rows="4" placeholder="Describe this product..." class="fur-input text-sm"></textarea>
                         @error('description') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                     </div>
