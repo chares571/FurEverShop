@@ -10,10 +10,38 @@ use Livewire\Component;
 
 class HomePage extends Component
 {
+    protected function redirectToLoginWithMessage(): void
+    {
+        session()->flash('status', 'Please log in first to add items to your cart.');
+        session()->put('url.intended', url()->previous());
+
+        $this->redirect(route('login'));
+    }
+
+    public function addToCart(int $productId): void
+    {
+        if (! Auth::check()) {
+            $this->redirectToLoginWithMessage();
+            return;
+        }
+
+        $product = Product::query()->findOrFail($productId);
+
+        if (! $product->inStock()) {
+            $this->dispatch('notify', message: 'That item is currently out of stock.', type: 'error');
+            return;
+        }
+
+        CartManager::add($product);
+
+        $this->dispatch('cart-updated');
+        $this->dispatch('notify', message: 'Added to your cart.', type: 'success');
+    }
+
     public function buyNow(int $productId): void
     {
-        if (!Auth::check()) {
-            $this->redirect(route('login'));
+        if (! Auth::check()) {
+            $this->redirectToLoginWithMessage();
             return;
         }
 

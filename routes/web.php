@@ -3,6 +3,7 @@
 use App\Livewire\Admin\DashboardPage;
 use App\Livewire\Admin\OrderManager;
 use App\Livewire\Admin\ProductManager;
+use App\Livewire\Admin\ProductReviewManager;
 use App\Livewire\CheckoutPage;
 use App\Livewire\HomePage;
 use App\Livewire\OrderHistoryPage;
@@ -39,6 +40,7 @@ Route::prefix('admin')
         Route::get('/dashboard', DashboardPage::class)->name('dashboard');
         Route::get('/products', ProductManager::class)->name('products');
         Route::get('/orders', OrderManager::class)->name('orders');
+        Route::get('/reviews', ProductReviewManager::class)->name('reviews');
     });
 
 require __DIR__.'/auth.php';

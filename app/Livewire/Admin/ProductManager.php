@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Models\Product;
 use App\Support\FurEver;
+use App\Support\ProductCatalogBackup;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -74,6 +75,8 @@ class ProductManager extends Component
 
         $product->save();
 
+        ProductCatalogBackup::sync();
+
         if (! array_key_exists($product->category, FurEver::categories())) {
             $this->existingCategory = $product->category;
         } else {
@@ -108,6 +111,8 @@ class ProductManager extends Component
         }
 
         $product->delete();
+
+        ProductCatalogBackup::sync();
 
         if ($this->productId === $productId) {
             $this->resetForm();

@@ -6,16 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Review extends Model
 {
+    public const ADMIN_DISPLAY_NAME = 'furevershop';
+
     protected $fillable = [
         'user_id',
         'product_id',
         'rating',
         'title',
         'feedback',
+        'admin_reply',
+        'admin_replied_at',
     ];
 
     protected $casts = [
         'rating' => 'integer',
+        'admin_replied_at' => 'datetime',
     ];
 
     public function user()
@@ -32,8 +37,13 @@ class Review extends Model
     {
         $stars = '';
         for ($i = 0; $i < 5; $i++) {
-            $stars .= $i < $this->rating ? '★' : '☆';
+            $stars .= $i < $this->rating ? 'â˜…' : 'â˜†';
         }
         return $stars;
+    }
+
+    public function getHasAdminReplyAttribute(): bool
+    {
+        return filled($this->admin_reply);
     }
 }

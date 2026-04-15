@@ -13,8 +13,21 @@ class ProductDetailsPage extends Component
 
     public int $quantity = 1;
 
+    protected function redirectToLoginWithMessage(): void
+    {
+        session()->flash('status', 'Please log in first to add items to your cart.');
+        session()->put('url.intended', url()->previous());
+
+        $this->redirect(route('login'));
+    }
+
     public function addToCart(): void
     {
+        if (! Auth::check()) {
+            $this->redirectToLoginWithMessage();
+            return;
+        }
+
         $validated = $this->validate([
             'quantity' => ['required', 'integer', 'min:1', 'max:'.$this->product->stock],
         ]);
@@ -22,13 +35,13 @@ class ProductDetailsPage extends Component
         CartManager::add($this->product, $validated['quantity']);
 
         $this->dispatch('cart-updated');
-        $this->dispatch('notify', message: "{$this->product->name} added to cart.");
+        $this->dispatch('notify', message: 'Added to your cart.', type: 'success');
     }
 
     public function buyNow(): void
     {
-        if (!Auth::check()) {
-            $this->redirect(route('login'));
+        if (! Auth::check()) {
+            $this->redirectToLoginWithMessage();
             return;
         }
 

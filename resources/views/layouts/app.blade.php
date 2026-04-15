@@ -13,19 +13,24 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
     </head>
-    <body class="antialiased">
-        <div class="min-h-screen">
+    <body class="min-h-screen bg-[#fff8f0] text-slate-900 antialiased">
+        <div class="min-h-screen overflow-hidden">
+            <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+                <div class="fur-orb -left-24 top-16 h-72 w-72 bg-orange-200/40"></div>
+                <div class="fur-orb right-0 top-24 h-80 w-80 bg-blue-200/25"></div>
+            </div>
+
             @include('layouts.navigation')
 
             @isset($header)
                 <header class="fur-shell py-8">
-                    <div class="fur-card px-6 py-5 sm:px-8">
+                    <div class="fur-card px-6 py-6 sm:px-8">
                         {{ $header }}
                     </div>
                 </header>
             @endisset
 
-            <main class="pb-16">
+            <main class="pb-20">
                 {{ $slot }}
             </main>
         </div>

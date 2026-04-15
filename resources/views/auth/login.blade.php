@@ -1,12 +1,11 @@
 <x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <x-auth-session-status class="mb-4 rounded-[22px] bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700" :status="session('status')" />
 
     <div class="space-y-6">
         <div class="space-y-2">
-            <p class="text-sm font-semibold uppercase tracking-[0.25em] text-orange-500">Welcome back</p>
+            <p class="fur-section-kicker">Welcome back</p>
             <h1 class="text-3xl font-black text-slate-900">Sign in to continue</h1>
-            <p class="text-sm text-slate-600">Access your orders, saved carts, and personalized recommendations.</p>
+            <p class="text-sm text-slate-600">Access your orders, saved carts, and a faster checkout flow.</p>
         </div>
 
         <form method="POST" action="{{ route('login') }}" class="space-y-5">
@@ -22,7 +21,7 @@
                     required
                     autofocus
                     autocomplete="username"
-                    class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-100"
+                    class="fur-input"
                     placeholder="you@example.com"
                 />
                 <x-input-error :messages="$errors->get('email')" class="mt-1 text-sm text-red-600" />
@@ -36,8 +35,8 @@
                     name="password"
                     required
                     autocomplete="current-password"
-                    class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-100"
-                    placeholder="••••••••"
+                    class="fur-input"
+                    placeholder="Enter your password"
                 />
                 <x-input-error :messages="$errors->get('password')" class="mt-1 text-sm text-red-600" />
             </div>
@@ -61,7 +60,7 @@
             </div>
 
             <div class="space-y-3">
-                <button type="submit" class="w-full rounded-2xl bg-orange-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-200 transition hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-200">
+                <button type="submit" class="fur-button w-full">
                     Log in
                 </button>
                 <p class="text-center text-sm text-slate-600">

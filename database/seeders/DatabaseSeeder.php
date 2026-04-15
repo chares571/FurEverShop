@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
         );
 
         $shopper = User::query()->updateOrCreate(
-            ['email' => 'shopper@furever.test'],
+            ['email' => 'user@furever.local'],
             [
                 'name' => 'FurEver Shopper',
                 'role' => User::ROLE_USER,

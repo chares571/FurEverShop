@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Order;
+use App\Models\Review;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -39,12 +40,18 @@ class OrderHistoryPage extends Component
 
     public function render()
     {
+        $reviewedProductIds = Review::query()
+            ->where('user_id', Auth::id())
+            ->pluck('product_id')
+            ->all();
+
         return view('livewire.order-history-page', [
             'orders' => Auth::user()
                 ->orders()
                 ->with(['items.product'])
                 ->latest()
                 ->paginate(6),
+            'reviewedProductIds' => array_flip($reviewedProductIds),
         ])->layout('layouts.storefront', [
             'title' => 'Order History | FurEver',
         ]);

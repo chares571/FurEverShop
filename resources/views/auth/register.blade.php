@@ -1,9 +1,9 @@
 <x-guest-layout>
     <div class="space-y-6">
         <div class="space-y-2">
-            <p class="text-sm font-semibold uppercase tracking-[0.25em] text-orange-500">Join FurEver</p>
+            <p class="fur-section-kicker">Join FurEver</p>
             <h1 class="text-3xl font-black text-slate-900">Create your account</h1>
-            <p class="text-sm text-slate-600">Track orders, save your pets’ favorites, and get personalized deals.</p>
+            <p class="text-sm text-slate-600">Track orders, save favorites, and keep repeat pet shopping simple.</p>
         </div>
 
         <form method="POST" action="{{ route('register') }}" class="space-y-5">
@@ -19,8 +19,8 @@
                     required
                     autofocus
                     autocomplete="name"
-                    class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-100"
-                    placeholder="FurEver Shopper"
+                    class="fur-input"
+                    placeholder="FurEver shopper"
                 />
                 <x-input-error :messages="$errors->get('name')" class="mt-1 text-sm text-red-600" />
             </div>
@@ -34,7 +34,7 @@
                     value="{{ old('email') }}"
                     required
                     autocomplete="username"
-                    class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-100"
+                    class="fur-input"
                     placeholder="you@example.com"
                 />
                 <x-input-error :messages="$errors->get('email')" class="mt-1 text-sm text-red-600" />
@@ -49,8 +49,8 @@
                         name="password"
                         required
                         autocomplete="new-password"
-                        class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-100"
-                        placeholder="••••••••"
+                        class="fur-input"
+                        placeholder="Create a password"
                     />
                     <x-input-error :messages="$errors->get('password')" class="mt-1 text-sm text-red-600" />
                 </div>
@@ -63,15 +63,15 @@
                         name="password_confirmation"
                         required
                         autocomplete="new-password"
-                        class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-100"
-                        placeholder="••••••••"
+                        class="fur-input"
+                        placeholder="Repeat your password"
                     />
                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-1 text-sm text-red-600" />
                 </div>
             </div>
 
             <div class="space-y-3">
-                <button type="submit" class="w-full rounded-2xl bg-orange-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-200 transition hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-200">
+                <button type="submit" class="fur-button w-full">
                     Create account
                 </button>
                 <p class="text-center text-sm text-slate-600">
