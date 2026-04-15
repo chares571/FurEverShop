@@ -77,7 +77,6 @@
                         <span class="fur-status-pill {{ $product->inStock() ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700' }}">
                             {{ $product->inStock() ? $product->stock.' available' : 'Sold Out' }}
                         </span>
-                        <a href="{{ route('shop.show', $product) }}" class="fur-link">Details</a>
                     </div>
 
                     <div class="mt-auto flex flex-wrap gap-2">
