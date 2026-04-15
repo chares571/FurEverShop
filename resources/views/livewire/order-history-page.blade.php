@@ -21,9 +21,20 @@
                         <p class="text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">Order #{{ $order->id }}</p>
                         <h2 class="mt-2 text-xl font-bold text-slate-900">{{ ucfirst($order->status) }}</h2>
                     </div>
-                    <div class="text-sm text-slate-500">
-                        <p>{{ $order->created_at->format('M d, Y h:i A') }}</p>
-                        <p class="text-lg font-black text-slate-900">₱{{ number_format($order->total_price, 2) }}</p>
+                    <div class="flex flex-col items-end gap-3">
+                        <div class="text-right text-sm text-slate-500">
+                            <p>{{ $order->created_at->format('M d, Y h:i A') }}</p>
+                            <p class="text-lg font-black text-slate-900">₱{{ number_format($order->total_price, 2) }}</p>
+                        </div>
+                        @if (in_array($order->status, ['pending', 'processing']))
+                            <button 
+                                wire:click="cancelOrder({{ $order->id }})"
+                                wire:confirm="Are you sure you want to cancel this order? Stock will be restored."
+                                class="rounded-lg bg-red-100 px-4 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-200"
+                            >
+                                ✕ Cancel Order
+                            </button>
+                        @endif
                     </div>
                 </div>
                 <div class="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">

@@ -1,13 +1,19 @@
 <div class="space-y-14">
+    @php
+        $isAdminShopView = auth()->check()
+            && auth()->user()->isAdmin()
+            && (request()->routeIs('shop.*') || request()->routeIs('home'));
+    @endphp
+    
     <section class="fur-shell pt-10">
         <div class="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
             <div class="fur-card overflow-hidden px-7 py-10 sm:px-10">
-                <span class="fur-badge bg-orange-100 text-orange-600">Livewire-powered pet boutique</span>
+                <span class="fur-badge bg-orange-100 text-orange-600">Trusted Pet Essentials Store</span>
                 <h1 class="mt-6 max-w-2xl text-4xl font-black tracking-tight text-slate-900 sm:text-6xl">
-                    FurEver makes pet shopping feel warm, fast, and joyful.
+                    Everything Your Pet Needs, All in One Place
                 </h1>
                 <p class="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
-                    Browse lovable essentials for dogs, cats, and everyday adventures with a smooth real-time shopping flow.
+                    Shop high-quality accessories for your pets—from toys and grooming tools to comfy beds and daily essentials. Fast, easy, and made for pet lovers like you.
                 </p>
                 <div class="mt-8 flex flex-wrap gap-4">
                     <a href="{{ route('shop.index') }}" class="fur-button">Shop Now</a>
@@ -32,11 +38,11 @@
             <div class="grid gap-4">
                 <div class="fur-card rotate-[-2deg] p-6">
                     <p class="text-sm font-semibold uppercase tracking-[0.25em] text-green-500">Pet-friendly design</p>
-                    <p class="mt-3 text-2xl font-bold text-slate-900">Soft visuals, quick cart actions, and a cleaner path to checkout.</p>
+                    <p class="mt-3 text-2xl font-bold text-slate-900">Carefully selected products designed for your pet's comfort, safety, and happiness.</p>
                 </div>
                 <div class="fur-card rotate-[2deg] bg-gradient-to-br from-blue-50 to-white p-6">
                     <p class="text-sm font-semibold uppercase tracking-[0.25em] text-blue-500">Real-time shopping</p>
-                    <p class="mt-3 text-2xl font-bold text-slate-900">Search, filter, and update your cart instantly with Livewire.</p>
+                    <p class="mt-3 text-2xl font-bold text-slate-900">Quick search, easy filtering, and a smooth checkout experience—so you can shop in seconds.</p>
                 </div>
             </div>
         </div>
@@ -81,9 +87,13 @@
         <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             @forelse ($featuredProducts as $product)
                 <article class="fur-card overflow-hidden transition duration-300 hover:-translate-y-1">
-                    <div class="flex aspect-[4/3] items-center justify-center bg-gradient-to-br from-orange-100 via-white to-blue-100">
+                    <div class="flex aspect-[4/3] items-center justify-center overflow-hidden bg-gradient-to-br from-orange-100 via-white to-blue-100">
                         @if ($product->image)
-                            <img src="{{ str_starts_with($product->image, 'http') ? $product->image : asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover">
+                            @if (strpos($product->image, 'http') === 0)
+                                <img src="{{ $product->image }}" alt="{{ $product->name }}" class="h-full w-full object-cover" loading="lazy">
+                            @else
+                                <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover" loading="lazy">
+                            @endif
                         @else
                             <span class="text-5xl font-black text-white/90 drop-shadow">{{ strtoupper(substr($product->name, 0, 1)) }}</span>
                         @endif
@@ -95,9 +105,18 @@
                         </div>
                         <h3 class="mt-4 text-xl font-bold text-slate-900">{{ $product->name }}</h3>
                         <p class="mt-2 text-sm leading-7 text-slate-500">{{ \Illuminate\Support\Str::limit($product->description, 110) }}</p>
-                        <div class="mt-5 flex items-center justify-between">
-                            <span class="text-sm font-medium text-slate-500">{{ $product->stock }} left</span>
-                            <a href="{{ route('shop.show', $product) }}" class="fur-button-secondary">View</a>
+                        <div class="mt-5 flex flex-col gap-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-medium text-slate-500">{{ $product->stock }} left</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <a href="{{ route('shop.show', $product) }}" class="fur-button-secondary flex-1 text-center">View</a>
+                                @if (!$isAdminShopView)
+                                    <button wire:click="buyNow({{ $product->id }})" wire:loading.attr="disabled" class="rounded-2xl border-2 border-orange-500 bg-white px-4 py-2 text-sm font-semibold text-orange-500 transition hover:bg-orange-50" @disabled(! $product->inStock())>
+                                        Buy Now
+                                    </button>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </article>

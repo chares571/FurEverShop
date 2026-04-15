@@ -38,7 +38,7 @@ class ProductManager extends Component
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'category' => ['required', Rule::in(array_keys(FurEver::categories()))],
-            'description' => ['required', 'string', 'max:4000'],
+            'description' => ['nullable', 'string', 'max:4000'],
             'price' => ['required', 'numeric', 'min:0.01'],
             'stock' => ['required', 'integer', 'min:0'],
             'is_featured' => ['boolean'],
@@ -46,9 +46,15 @@ class ProductManager extends Component
         ]);
 
         $product = $this->productId ? Product::query()->findOrFail($this->productId) : new Product();
+        
+        // Set slug for new products
+        if (!$this->productId) {
+            $product->slug = Str::slug($validated['name']).'-'.fake()->unique()->numberBetween(100, 999);
+        }
+        
         $product->fill([
             'name' => $validated['name'],
-            'slug' => $product->slug,
+            'slug' => $this->productId ? $product->slug : $product->slug,
             'category' => $validated['category'],
             'description' => $validated['description'],
             'price' => $validated['price'],
@@ -57,11 +63,6 @@ class ProductManager extends Component
         ]);
 
         $product->save();
-
-        if (!$this->productId) {
-            $product->slug = Str::slug($product->name).'-'.$product->id;
-            $product->save();
-        }
 
         if ($this->image) {
             if ($product->image) {

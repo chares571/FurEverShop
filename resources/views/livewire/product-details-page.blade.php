@@ -3,7 +3,11 @@
         <div class="fur-card overflow-hidden">
             <div class="flex aspect-square items-center justify-center bg-gradient-to-br from-orange-100 via-white to-blue-100">
                 @if ($product->image)
-                    <img src="{{ str_starts_with($product->image, 'http') ? $product->image : asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover">
+                    @if (strpos($product->image, 'http') === 0)
+                        <img src="{{ $product->image }}" alt="{{ $product->name }}" class="h-full w-full object-cover" loading="lazy">
+                    @else
+                        <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover" loading="lazy">
+                    @endif
                 @else
                     <span class="text-7xl font-black text-white/90 drop-shadow">{{ strtoupper(substr($product->name, 0, 1)) }}</span>
                 @endif
@@ -26,9 +30,17 @@
                 <button wire:click="addToCart" wire:loading.attr="disabled" class="fur-button flex-1" @disabled(! $product->inStock())>
                     Add to cart
                 </button>
+                <button wire:click="buyNow" wire:loading.attr="disabled" class="flex-1 rounded-2xl border-2 border-orange-500 bg-white px-4 py-3 text-sm font-semibold text-orange-500 transition hover:bg-orange-50" @disabled(! $product->inStock())>
+                    Buy Now
+                </button>
             </div>
             @error('quantity') <p class="mt-2 text-sm font-medium text-red-500">{{ $message }}</p> @enderror
         </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section>
+        <livewire:product-review :product="$product" />
     </section>
 
     <section class="pb-8">
@@ -44,7 +56,11 @@
                 <a href="{{ route('shop.show', $relatedProduct) }}" class="fur-card block overflow-hidden p-4 transition duration-300 hover:-translate-y-1">
                     <div class="flex aspect-square items-center justify-center rounded-3xl bg-gradient-to-br from-orange-100 via-white to-blue-100">
                         @if ($relatedProduct->image)
-                            <img src="{{ str_starts_with($relatedProduct->image, 'http') ? $relatedProduct->image : asset('storage/'.$relatedProduct->image) }}" alt="{{ $relatedProduct->name }}" class="h-full w-full rounded-3xl object-cover">
+                            @if (strpos($relatedProduct->image, 'http') === 0)
+                                <img src="{{ $relatedProduct->image }}" alt="{{ $relatedProduct->name }}" class="h-full w-full rounded-3xl object-cover" loading="lazy">
+                            @else
+                                <img src="{{ asset('storage/'.$relatedProduct->image) }}" alt="{{ $relatedProduct->name }}" class="h-full w-full rounded-3xl object-cover" loading="lazy">
+                            @endif
                         @else
                             <span class="text-4xl font-black text-white/90 drop-shadow">{{ strtoupper(substr($relatedProduct->name, 0, 1)) }}</span>
                         @endif
