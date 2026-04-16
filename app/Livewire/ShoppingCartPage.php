@@ -19,6 +19,7 @@ class ShoppingCartPage extends Component
 
         CartManager::update($product, $current['quantity'] + 1);
         $this->dispatch('cart-updated');
+        $this->dispatch('cart-updated')->to(CartCounter::class);
     }
 
     public function decrease(int $productId): void
@@ -32,12 +33,14 @@ class ShoppingCartPage extends Component
 
         CartManager::update($product, $current['quantity'] - 1);
         $this->dispatch('cart-updated');
+        $this->dispatch('cart-updated')->to(CartCounter::class);
     }
 
     public function remove(int $productId): void
     {
         CartManager::remove($productId);
         $this->dispatch('cart-updated');
+        $this->dispatch('cart-updated')->to(CartCounter::class);
         $this->dispatch('notify', message: 'Item removed from cart.');
     }
 

@@ -35,7 +35,8 @@ class ProductDetailsPage extends Component
         CartManager::add($this->product, $validated['quantity']);
 
         $this->dispatch('cart-updated');
-        $this->dispatch('notify', message: 'Added to your cart.', type: 'success');
+        $this->dispatch('cart-updated')->to(CartCounter::class);
+        $this->js("\$window.dispatchEvent(new CustomEvent('flash-message', { detail: { message: 'Added to your cart.', type: 'success' } }))");
     }
 
     public function buyNow(): void
@@ -49,12 +50,9 @@ class ProductDetailsPage extends Component
             'quantity' => ['required', 'integer', 'min:1', 'max:'.$this->product->stock],
         ]);
 
-        // Clear cart and add this product
-        CartManager::clear();
-        CartManager::add($this->product, $validated['quantity']);
+        CartManager::startBuyNow($this->product, $validated['quantity']);
 
-        $this->dispatch('cart-updated');
-        $this->redirect(route('checkout.index'));
+        $this->redirect(route('checkout.index', ['mode' => 'buy-now']));
     }
 
     public function render()

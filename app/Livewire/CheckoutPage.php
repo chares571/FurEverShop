@@ -11,6 +11,8 @@ use Livewire\Component;
 
 class CheckoutPage extends Component
 {
+    public bool $isBuyNowCheckout = false;
+
     public string $shipping_name = '';
     public string $shipping_email = '';
     public string $shipping_phone = '';
@@ -23,11 +25,12 @@ class CheckoutPage extends Component
         $user = Auth::user();
         $this->shipping_name = $user->name;
         $this->shipping_email = $user->email;
+        $this->isBuyNowCheckout = request()->query('mode') === 'buy-now';
     }
 
     public function placeOrder()
     {
-        $items = CartManager::content();
+        $items = $this->checkoutItems();
 
         abort_if($items->isEmpty(), 403, 'Your cart is empty.');
 
@@ -72,18 +75,32 @@ class CheckoutPage extends Component
             return $order;
         });
 
-        CartManager::clear();
-        $this->dispatch('cart-updated');
-        session()->flash('success', 'Order placed successfully. We are packing it with care.');
+        if ($this->isBuyNowCheckout) {
+            CartManager::clearBuyNow();
+        } else {
+            CartManager::clear();
+            $this->dispatch('cart-updated');
+        }
 
-        return redirect()->route('orders.index', ['highlight' => $order->id]);
+        return redirect()
+            ->route('orders.index', ['highlight' => $order->id])
+            ->with('success', 'Order placed successfully. We are packing it with care.');
+    }
+
+    protected function checkoutItems()
+    {
+        return $this->isBuyNowCheckout
+            ? CartManager::buyNowContent()
+            : CartManager::content();
     }
 
     public function render()
     {
+        $items = $this->checkoutItems();
+
         return view('livewire.checkout-page', [
-            'items' => CartManager::content(),
-            'subtotal' => CartManager::subtotal(),
+            'items' => $items,
+            'subtotal' => $items->sum('subtotal'),
         ])->layout('layouts.storefront', [
             'title' => 'Checkout | FurEver',
         ]);

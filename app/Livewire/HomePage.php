@@ -28,14 +28,15 @@ class HomePage extends Component
         $product = Product::query()->findOrFail($productId);
 
         if (! $product->inStock()) {
-            $this->dispatch('notify', message: 'That item is currently out of stock.', type: 'error');
+            $this->js("\$window.dispatchEvent(new CustomEvent('flash-message', { detail: { message: 'That item is currently out of stock.', type: 'error' } }))");
             return;
         }
 
         CartManager::add($product);
 
         $this->dispatch('cart-updated');
-        $this->dispatch('notify', message: 'Added to your cart.', type: 'success');
+        $this->dispatch('cart-updated')->to(CartCounter::class);
+        $this->js("\$window.dispatchEvent(new CustomEvent('flash-message', { detail: { message: 'Added to your cart.', type: 'success' } }))");
     }
 
     public function buyNow(int $productId): void
@@ -48,16 +49,13 @@ class HomePage extends Component
         $product = Product::query()->findOrFail($productId);
 
         if (! $product->inStock()) {
-            $this->dispatch('notify', message: 'That item is currently out of stock.', type: 'error');
+            $this->js("\$window.dispatchEvent(new CustomEvent('flash-message', { detail: { message: 'That item is currently out of stock.', type: 'error' } }))");
             return;
         }
 
-        // Clear cart and add this product
-        CartManager::clear();
-        CartManager::add($product);
+        CartManager::startBuyNow($product);
 
-        $this->dispatch('cart-updated');
-        $this->redirect(route('checkout.index'));
+        $this->redirect(route('checkout.index', ['mode' => 'buy-now']));
     }
 
     public function render()

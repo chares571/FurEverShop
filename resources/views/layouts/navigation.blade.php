@@ -1,7 +1,7 @@
 @php
     $isAdminShopView = auth()->check()
         && auth()->user()->isAdmin()
-        && (request()->routeIs('shop.*') || request()->routeIs('home'));
+        && request()->routeIs('shop.*');
 @endphp
 
 <nav x-data="{ open: false }" class="sticky top-0 z-40 border-b border-white/70 bg-[#fff8f0]/80 backdrop-blur-xl">

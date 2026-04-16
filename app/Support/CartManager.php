@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 class CartManager
 {
     public const SESSION_KEY = 'furever_cart';
+    public const BUY_NOW_SESSION_KEY = 'furever_buy_now';
 
     public static function content(): Collection
     {
@@ -43,6 +44,22 @@ class CartManager
         session([self::SESSION_KEY => $cart]);
     }
 
+    public static function startBuyNow(Product $product, int $quantity = 1): void
+    {
+        session([
+            self::BUY_NOW_SESSION_KEY => [
+                $product->id => [
+                    'name' => $product->name,
+                    'price' => (float) $product->price,
+                    'quantity' => min($product->stock, $quantity),
+                    'image' => $product->image,
+                    'slug' => $product->slug,
+                    'stock' => $product->stock,
+                ],
+            ],
+        ]);
+    }
+
     public static function update(Product $product, int $quantity): void
     {
         $cart = session(self::SESSION_KEY, []);
@@ -67,6 +84,27 @@ class CartManager
     public static function clear(): void
     {
         session()->forget(self::SESSION_KEY);
+    }
+
+    public static function buyNowContent(): Collection
+    {
+        return collect(session(self::BUY_NOW_SESSION_KEY, []))
+            ->map(fn (array $item, int $productId) => [
+                'product_id' => (int) $productId,
+                'name' => $item['name'],
+                'price' => (float) $item['price'],
+                'quantity' => (int) $item['quantity'],
+                'image' => $item['image'] ?? null,
+                'slug' => $item['slug'] ?? null,
+                'stock' => (int) ($item['stock'] ?? 0),
+                'subtotal' => (float) $item['price'] * (int) $item['quantity'],
+            ])
+            ->values();
+    }
+
+    public static function clearBuyNow(): void
+    {
+        session()->forget(self::BUY_NOW_SESSION_KEY);
     }
 
     public static function count(): int

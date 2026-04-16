@@ -62,7 +62,7 @@
             </div>
 
             @auth
-                <a href="{{ $items->isEmpty() ? '#' : route('checkout.index') }}" class="mt-6 {{ $items->isEmpty() ? 'pointer-events-none opacity-50' : '' }} fur-button w-full">
+                <a href="{{ $items->isEmpty() ? '#' : route('checkout.index', ['mode' => 'cart']) }}" class="mt-6 {{ $items->isEmpty() ? 'pointer-events-none opacity-50' : '' }} fur-button w-full">
                     Proceed to checkout
                 </a>
             @else
